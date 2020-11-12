@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itemHome"
+        android:title="Home"/>
+    <item
+        android:id="@+id/itemRecipes"
+        android:title="Recipes Suggestion"/>
+    <item
+        android:id="@+id/itemAddFriend"
+        android:title="Add Friend"/>
+    <item
+        android:id="@+id/itemAccount"
+        android:title="My Account"/>
+
+</menu>
