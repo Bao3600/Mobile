@@ -6,19 +6,41 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface ApiInterface {
     @Headers("Content-Type:application/json")
     @POST("api/login")
-    fun signin(@Body info: SignInBody): retrofit2.Call<ResponseBody>
+    fun signin(
+            @Body info: SignInBody
+    ): retrofit2.Call<ResponseBody>
 
     @Headers("Content-Type:application/json")
     @POST("api/register")
     fun registerUser(
         @Body info: UserBody
     ): retrofit2.Call<ResponseBody>
+
+    @Headers("Content-Type:application/json")
+    @POST("api/addFood")
+    fun addFood(
+            @Body info: addFoodBody
+    ): retrofit2.Call<ResponseBody>
+
+    @Headers("Content-Type:application/json")
+    @POST("api/deleteFood")
+    fun deleteFood(
+            @Body info: deleteFoodBody
+    ): retrofit2.Call<ResponseBody>
+
+
+    /*@Headers("Content-Type:application/json")
+    @GET("api/register")
+    fun foods(
+            @Body info: UserBody
+    ): retrofit2.Call<ResponseBody>*/
 }
 class RetrofitInstance {
     companion object {
