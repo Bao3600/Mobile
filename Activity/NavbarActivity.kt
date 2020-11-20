@@ -12,8 +12,6 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.foodbuddy.Fragment.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_home.*
-
 
 class NavbarActivity : AppCompatActivity(){
 
@@ -23,13 +21,6 @@ class NavbarActivity : AppCompatActivity(){
     lateinit var listView: ListView
     var list: ArrayList<String> = ArrayList()
     lateinit var arrayAdapter: ArrayAdapter<String>
-
-    /*lateinit var homeFragment: HomeFragment
-    lateinit var recipesFragment: RecipesFragment
-    lateinit var addfriendFragment: AddfriendFragment
-    lateinit var myaccountFragment: MyaccountFragment
-    lateinit var logoutFragment: LogoutFragment
-*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,10 +50,10 @@ class NavbarActivity : AppCompatActivity(){
         }
         var navigationView: NavigationView = findViewById(R.id.navView)
         //homeFragment = HomeFragment()
-       /* supportFragmentManager
-            .beginTransaction()
-            val intent = Intent(this, NavbarActivity::class.java);
-            startActivity(intent)*/
+        /* supportFragmentManager
+             .beginTransaction()
+             val intent = Intent(this, NavbarActivity::class.java);
+             startActivity(intent)*/
 
 
         navigationView.setNavigationItemSelectedListener { item ->
@@ -73,9 +64,9 @@ class NavbarActivity : AppCompatActivity(){
                     //homeFragment = HomeFragment()
                     supportFragmentManager
                             .beginTransaction()
-                            val intent = Intent(this, NavbarActivity::class.java);
-                            startActivity(intent)
-                            drawerLayout.closeDrawers()
+                    val intent = Intent(this, NavbarActivity::class.java);
+                    startActivity(intent)
+                    drawerLayout.closeDrawers()
                 }
                 /*R.id.itemRecipes -> {
                     recipesFragment = RecipesFragment()
@@ -121,12 +112,12 @@ class NavbarActivity : AppCompatActivity(){
         listView = findViewById(R.id.listView)
         editText = findViewById(R.id.editText)
         button = findViewById(R.id.btnAdd)
-        arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
         button.setOnClickListener {
+            arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
             list.add(editText.text.toString())
-            editText.setText(" ")
-            arrayAdapter.notifyDataSetChanged()
+            editText.setText("")
             listView.adapter = arrayAdapter
+            arrayAdapter.notifyDataSetChanged()
         }
         val search = findViewById<SearchView>(R.id.searchView)
         search .setOnQueryTextListener(object :SearchView.OnQueryTextListener{
@@ -148,15 +139,14 @@ class NavbarActivity : AppCompatActivity(){
             }
 
         })
-      
+    }
 
-}
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
 
- if (toggle.onOptionsItemSelected(item)) {
-     return true
- }
- return super.onOptionsItemSelected(item)
-}
+        return super.onOptionsItemSelected(item)
+    }
 }
