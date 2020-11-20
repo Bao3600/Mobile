@@ -10,6 +10,8 @@ import android.widget.EditText
 import com.example.foodbuddy.API.ApiInterface
 import com.example.foodbuddy.API.RetrofitInstance
 import com.example.foodbuddy.API.UserBody
+import com.example.foodbuddy.PasswordUtils.salt
+import com.example.foodbuddy.PasswordUtils.sha256
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,15 +38,16 @@ class RegisterActivity : AppCompatActivity() {
             val fName = findViewById<EditText>(R.id.fName).text.toString()
             val lName = findViewById<EditText>(R.id.lName).text.toString()
             val email = findViewById<EditText>(R.id.email).text.toString()
-            val password = findViewById<EditText>(R.id.password).text.toString()
+            val password = salt(findViewById<EditText>(R.id.password).text.toString()).sha256()
+            val password2 = salt(findViewById<EditText>(R.id.password).text.toString()).sha256()
 
             signup(username, fName, lName, email, password)
 
         }
 
     }
-    private fun signup(username: String, email: String, fName: String,
-                       lName: String, password: String){
+    private fun signup(username: String, fName: String,
+                       lName: String, email: String,password: String){
         val retIn = RetrofitInstance.getRetrofitInstance().create(ApiInterface::class.java)
         val registerInfo = UserBody(username, email,fName, lName, password)
         val reg = Intent(this, MainActivity::class.java)
