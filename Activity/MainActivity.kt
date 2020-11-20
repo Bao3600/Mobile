@@ -10,13 +10,16 @@ import android.widget.Toast
 import com.example.foodbuddy.API.ApiInterface
 import com.example.foodbuddy.API.RetrofitInstance
 import com.example.foodbuddy.API.SignInBody
+import com.example.foodbuddy.PasswordUtils.salt
+import com.example.foodbuddy.PasswordUtils.sha256
+import com.google.gson.JsonObject
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +37,9 @@ class MainActivity : AppCompatActivity() {
         login.setOnClickListener{
 
             val username = findViewById<EditText>(R.id.username).text.toString()
-            val password = findViewById<EditText>(R.id.password).text.toString()
+            val password = salt(findViewById<EditText>(R.id.password).text.toString()).sha256()
 
-            //signin(username,password)
-
-            val dash = Intent(this, NavbarActivity::class.java);
-            startActivity(dash)
+            signin(username,password)
         }
     }
 
@@ -64,7 +64,16 @@ class MainActivity : AppCompatActivity() {
             {
                 if (response.code() == 200)
                 {
-                    Toast.makeText(this@MainActivity, "Login success!", Toast.LENGTH_SHORT).show()
+                    val stringResponse = response.body()?.string()
+                    Toast.makeText(this@MainActivity, "DEBUG", Toast.LENGTH_SHORT).show()
+                    val json = JSONObject(stringResponse)
+
+                    val fName = json.getString("fName")
+                    val lName = json.getString("lName")
+                    val email = json.getString("email")
+
+                    Toast.makeText(this@MainActivity, fName, Toast.LENGTH_SHORT).show()
+
                     startActivity(dash)
                 }
                 else
@@ -74,5 +83,4 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
 }
