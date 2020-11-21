@@ -39,6 +39,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
+            android:queryHint="Search"
+            android:iconifiedByDefault="false"
             android:background="@drawable/ic_searchbar" />
 
 
