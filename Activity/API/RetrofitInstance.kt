@@ -10,9 +10,8 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-
 interface ApiInterface {
-    @Headers("Content-Type:application/json")
+    @Headers("Content-Type:application/json", "credentials:include")
     @POST("api/login")
     fun signin(
             @Body info: SignInBody
@@ -24,24 +23,18 @@ interface ApiInterface {
         @Body info: UserBody
     ): retrofit2.Call<ResponseBody>
 
-    @Headers("Content-Type:application/json")
+    @Headers("Content-Type:application/json", "credentials:include")
     @POST("api/addFood")
     fun addFood(
-            @Body info: addFoodBody
+            @Body info: AddFoodBody
     ): retrofit2.Call<ResponseBody>
 
     @Headers("Content-Type:application/json")
     @POST("api/deleteFood")
     fun deleteFood(
-            @Body info: deleteFoodBody
+            @Body info: DeleteFoodBody
     ): retrofit2.Call<ResponseBody>
 
-
-    /*@Headers("Content-Type:application/json")
-    @GET("api/register")
-    fun foods(
-            @Body info: UserBody
-    ): retrofit2.Call<ResponseBody>*/
 }
 class RetrofitInstance {
     companion object {
