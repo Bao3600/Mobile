@@ -11,10 +11,6 @@
         android:id="@+id/itemRecipes"
         android:icon="@drawable/ic_foodbank"
         android:title="Recipes Suggestion" />
-    <item
-        android:id="@+id/itemAddFriend"
-        android:icon="@drawable/ic_add"
-        android:title="Add Friend" />
 
     <item android:title="Setting">
 
