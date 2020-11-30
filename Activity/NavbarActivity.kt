@@ -93,11 +93,13 @@ class NavbarActivity : AppCompatActivity() {
                 }
                 R.id.itemRecipes -> {
                     //recipesFragment = RecipesFragment()
-                    supportFragmentManager
-                            .beginTransaction()
+                   toRecipes()
 //                    val intent = Intent(this, RecipesActivity::class.java);
 //                    startActivity(intent)
 //                    drawerLayout.closeDrawers()
+                }
+                R.id.itemAccount -> {
+                    toMyAccount()
                 }
                 //region
                 /*
