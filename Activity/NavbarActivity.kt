@@ -249,6 +249,15 @@ class NavbarActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+    private fun toRecipes() {
+        launchActivity<RecipesSuggestionActivity>()
+    }
+
+    private fun toMyAccount() {
+        launchActivity<MyAccountActivity>()
+    }
+}
+
 
     private fun addFood(item: String, brand: String, password: String)
     {
