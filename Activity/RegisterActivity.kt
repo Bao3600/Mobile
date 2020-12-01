@@ -39,7 +39,6 @@ class RegisterActivity : AppCompatActivity() {
             val lName = findViewById<EditText>(R.id.lName).text.toString()
             val email = findViewById<EditText>(R.id.email).text.toString()
             val password = salt(findViewById<EditText>(R.id.password).text.toString()).sha256()
-            val password2 = salt(findViewById<EditText>(R.id.password).text.toString()).sha256()
 
             signup(username, fName, lName, email, password)
 
@@ -49,7 +48,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun signup(username: String, fName: String,
                        lName: String, email: String,password: String){
         val retIn = RetrofitInstance.getRetrofitInstance().create(ApiInterface::class.java)
-        val registerInfo = UserBody(username, email,fName, lName, password)
+        val registerInfo = UserBody(username,fName, lName, email, password)
         val reg = Intent(this, MainActivity::class.java)
 
         retIn.registerUser(registerInfo).enqueue(object :
