@@ -9,9 +9,10 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import java.net.HttpCookie
 
 interface ApiInterface {
-    @Headers("Content-Type:application/json", "credentials:include")
+    @Headers("Content-Type:application/json")
     @POST("api/login")
     fun signin(
             @Body info: SignInBody
@@ -23,7 +24,7 @@ interface ApiInterface {
         @Body info: UserBody
     ): retrofit2.Call<ResponseBody>
 
-    @Headers("Content-Type:application/json", "credentials:include")
+    @Headers("Content-Type:application/json")
     @POST("api/addFood")
     fun addFood(
             @Body info: AddFoodBody
@@ -36,6 +37,7 @@ interface ApiInterface {
     ): retrofit2.Call<ResponseBody>
 
 }
+
 class RetrofitInstance {
     companion object {
         val BASE_URL: String = "https://group1largeproject.herokuapp.com/"
@@ -47,6 +49,7 @@ class RetrofitInstance {
         val client: OkHttpClient = OkHttpClient.Builder().apply {
             this.addInterceptor(interceptor)
         }.build()
+
         fun getRetrofitInstance(): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
