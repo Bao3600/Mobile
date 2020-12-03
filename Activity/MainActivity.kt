@@ -18,6 +18,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.HttpCookie
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,15 +66,27 @@ class MainActivity : AppCompatActivity() {
                 if (response.code() == 200)
                 {
                     val stringResponse = response.body()?.string()
-                    Toast.makeText(this@MainActivity, "DEBUG", Toast.LENGTH_SHORT).show()
                     val json = JSONObject(stringResponse)
 
                     val fName = json.getString("fName")
                     val lName = json.getString("lName")
                     val email = json.getString("email")
 
-                    Toast.makeText(this@MainActivity, fName, Toast.LENGTH_SHORT).show()
+                    val cookie = response.headers().get("Set-Cookie")
 
+                    val delim1 = "="
+                    val delim2 = ";"
+
+                    val parts = cookie?.split(delim1, delim2)
+
+                    val tokenValue = parts?.get(1)
+
+                    Toast.makeText(this@MainActivity, cookie, Toast.LENGTH_SHORT).show()
+
+                    dash.putExtra("fName",fName)
+                    dash.putExtra("lName",lName)
+                    dash.putExtra("email",email)
+                    dash.putExtra("tokenValue",tokenValue)
                     startActivity(dash)
                 }
                 else
