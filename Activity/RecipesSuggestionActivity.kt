@@ -92,7 +92,7 @@ class RecipesSuggestionActivity : AppCompatActivity() {
                 val bean = list[i]
                 val split = bean.split("  ")
                 dialog.itemClickListener = {
-                    //TODO：Get Recipes 的回调
+                    
                 }
                 dialog.show()
                 Log.d("ez", "onCreate: ${split[0]} ${split[1]} ${split[2]}")
