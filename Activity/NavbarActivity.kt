@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.foodbuddy.API.*
 import com.google.android.material.navigation.NavigationView
 import okhttp3.ResponseBody
@@ -17,6 +18,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.HttpCookie
+import com.intellif.dblib.bean.Food
+import com.intellif.dblib.bean.FoodDatabase
+import com.blankj.utilcode.util.KeyboardUtils
 
 
 class NavbarActivity : AppCompatActivity() {
@@ -36,22 +40,21 @@ class NavbarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navbar)
         initView()
-
-        val bundle: Bundle? = intent.extras
-        val fName: String? = bundle?.getString("fName")
-        val lName: String? = bundle?.getString("lName")
-        val email: String? = bundle?.getString("email")
-        val tokenValue: String? = bundle?.getString("tokenValue")
-
         val drawerLayout =
-            findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawerLayout)
+            findViewById<DrawerLayout>(R.id.drawerLayout)
         val navView =
-            findViewById<com.google.android.material.navigation.NavigationView>(R.id.navView)
+            findViewById<NavigationView>(R.id.navView)
 
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        toggle = ActionBarDrawerToggle(
+            this, drawerLayout,
+            R.string.open,
+            R.string.close
+        )
         toggle.isDrawerIndicatorEnabled = true
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -93,39 +96,23 @@ class NavbarActivity : AppCompatActivity() {
                         .beginTransaction()
                     val intent = Intent(this, NavbarActivity::class.java);
                     startActivity(intent)
-                    drawerLayout.closeDrawers()
                 }
                 R.id.itemRecipes -> {
                     //recipesFragment = RecipesFragment()
-                    toRecipes()
+//                    supportFragmentManager
+//                        .beginTransaction()
 //                    val intent = Intent(this, RecipesActivity::class.java);
 //                    startActivity(intent)
 //                    drawerLayout.closeDrawers()
+
+                    toRecipes()
                 }
+                //region
+
                 R.id.itemAccount -> {
                     toMyAccount()
                 }
-                //region
-                /*
-                R.id.itemAddFriend -> {
-                    addfriendFragment = AddfriendFragment()
-                    supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.frame_layout, addfriendFragment)
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .commit()
-                            drawerLayout.closeDrawers()
-                }
-                R.id.itemAccount -> {
-                    myaccountFragment = MyaccountFragment()
-                    supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.frame_layout, MyaccountFragment())
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .commit()
-                            drawerLayout.closeDrawers()
-                }
-                R.id.itemLogout -> {
+                /*R.id.itemLogout -> {
                     logoutFragment = LogoutFragment()
                     supportFragmentManager
                             .beginTransaction()
@@ -137,11 +124,29 @@ class NavbarActivity : AppCompatActivity() {
 */
                 //endregion
             }
+            drawerLayout.closeDrawers()
             true
 
         }
 
-        var arrayAdapter = MessageAdapter(this, R.layout.item_nav, list)
+        var arrayAdapter = MessageAdapter(
+            this,
+            R.layout.item_nav,
+            list
+        )
+        val db=FoodDatabase.getInstance(this).getFoodDao()
+        val allFood = db.getAllFood()
+        if (allFood != null && allFood.isNotEmpty()) {
+            for (i in allFood.indices) {
+                list.add("${allFood[i].foodName}  ${allFood[i].Num}  ${allFood[i].date}")
+            }
+            var arrayAdapter = MessageAdapter(
+                this,
+                R.layout.item_nav,
+                list
+            )
+            listView.adapter = arrayAdapter
+        }
 
         val search = findViewById<SearchView>(R.id.searchView)
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -171,49 +176,58 @@ class NavbarActivity : AppCompatActivity() {
 //        arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
 //        listView.adapter = arrayAdapter
 
-        // Add
+        //添加
         button.setOnClickListener {
-            val text = editText.text.toString()
-            val text2 = editText2.text.toString()
-            val text3 = editText3.text.toString()
-            if (TextUtils.isEmpty(text) || TextUtils.isEmpty(text2) || TextUtils.isEmpty(text3)) {
+            var text = editText.text.toString()
+            var text2 = editText2.text.toString()
+            var text3 = editText3.text.toString()
+            if (TextUtils.isEmpty(text) && TextUtils.isEmpty(text2) && TextUtils.isEmpty(text3)) {
                 Toast.makeText(this, "Content can not be blank", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            if (tokenValue != null) {
-                addFood(text, text2, text3, tokenValue)
-            }
-            arrayAdapter = MessageAdapter(this, R.layout.item_nav, list)
+            list.add("$text  $text2  $text3")
+            val food = Food(foodName = "$text",Num = "$text2",date = "$text3")
+            val insert = db.insert(food)
+            EzLog.d("inset-->${insert}")
+            arrayAdapter = MessageAdapter(
+                this,
+                R.layout.item_nav,
+                list
+            )
             listView.adapter = arrayAdapter
             editText.setText("")
             editText2.setText("")
             editText3.setText("")
+            KeyboardUtils.hideSoftInput(this)
         }
 
-//        // Delete
-//        btnDelete.setOnClickListener {
-//            list.removeAt(position)
-//            arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,list)
-//            listView.adapter = arrayAdapter
-//            arrayAdapter.notifyDataSetChanged()
-//        }
 
-        // Update
+
+        //修改
         btnUpdate.setOnClickListener {
             val text = editText.text.toString()
             val text2 = editText2.text.toString()
             val text3 = editText3.text.toString()
             if (TextUtils.isEmpty(text) || TextUtils.isEmpty(text2) || TextUtils.isEmpty(text3)) {
-                Toast.makeText(this, "Please enter the content to be updated", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Please enter the content to be updated", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            list[position.toInt()] = "$text  $text2  $text3"
+            val food = Food(foodName = "$text",Num = "$text2",date = "$text3")
+            val update = db.update("$text","$text2","$text3")
+            EzLog.d("update-->${update}")
+            if(update==0){
+                val date = list[position].split("  ")[2]
+                val delete = db.delete(date)
+                EzLog.d("delete--->${date}   ${delete}")
+                val insert = db.insert(food)
+                EzLog.d("update inset-->${insert}")
+            }
             editText.setText("")
             editText2.setText("")
             editText3.setText("")
+            list[position] = "$text  $text2  $text3"
             arrayAdapter.notifyDataSetChanged()
+            KeyboardUtils.hideSoftInput(this)
         }
         val dialog = MyDialog(this)
 
@@ -223,8 +237,17 @@ class NavbarActivity : AppCompatActivity() {
                 val bean = list[i]
                 val split = bean.split("  ")
                 dialog.deleteListener = {
+
+                    arrayAdapter =
+                        MessageAdapter(
+                            this,
+                            R.layout.item_nav,
+                            list
+                        )
+                    val date = list[position].split("  ")[2]
+                    val delete = db.delete(date)
+                    EzLog.d("delete--->${date}   ${delete}")
                     list.removeAt(position)
-                    arrayAdapter = MessageAdapter(this, R.layout.item_nav, list)
                     listView.adapter = arrayAdapter
                     arrayAdapter.notifyDataSetChanged()
                 }
@@ -263,34 +286,5 @@ class NavbarActivity : AppCompatActivity() {
 
     private fun toMyAccount() {
         launchActivity<MyAccountActivity>()
-    }
-
-
-    private fun addFood(item: String, brand: String, password: String, token: String) {
-        val retIn = RetrofitInstance.getRetrofitInstance().create(ApiInterface::class.java)
-        val addFoodInfo = AddFoodBody(item, brand, password, token)
-        val dash = Intent(this@NavbarActivity, NavbarActivity::class.java)
-
-        retIn.addFood(addFoodInfo).enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(
-                    this@NavbarActivity,
-                    t.message,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.code() == 200) {
-
-                    Toast.makeText(this@NavbarActivity, "Add food Successful", Toast.LENGTH_SHORT)
-                        .show()
-                    startActivity(dash)
-                } else {
-                    Toast.makeText(this@NavbarActivity, "Add Food failed!", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        })
     }
 }
