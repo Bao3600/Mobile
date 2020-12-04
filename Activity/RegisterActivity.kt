@@ -62,6 +62,16 @@ class RegisterActivity : AppCompatActivity() {
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == 200) {
+
+                    val fName = findViewById<EditText>(R.id.fName).text.toString()
+                    val lName = findViewById<EditText>(R.id.lName).text.toString()
+                    val email = findViewById<EditText>(R.id.email).text.toString()
+                    /****This is used to save the user information after successful login,
+                     * which will be displayed on the My Account page***/
+                    User.fName =fName
+                    User.lName = lName
+                    User.email = email
+
                     Toast.makeText(this@RegisterActivity, "Registration success!", Toast.LENGTH_SHORT)
                         .show()
                     startActivity(reg)
@@ -74,3 +84,4 @@ class RegisterActivity : AppCompatActivity() {
         })
     }
 }
+
