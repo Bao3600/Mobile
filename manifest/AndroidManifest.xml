@@ -12,12 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Foodbuddy">
         <activity
+            android:label="Recipes"
             android:name=".RecipesSuggestionActivity"
             android:launchMode="singleTask" />
         <activity
+            android:label="My Account"
             android:name=".MyAccountActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".HomeActivity"></activity>
         <activity android:name=".NavbarActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity">
