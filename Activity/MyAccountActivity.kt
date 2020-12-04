@@ -3,6 +3,7 @@ package com.example.foodbuddy
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationView
@@ -15,11 +16,14 @@ class MyAccountActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_account)
         val drawerLayout =
-                findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawerLayout)
+            findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawerLayout)
         val navView =
-                findViewById<com.google.android.material.navigation.NavigationView>(R.id.navView)
+            findViewById<com.google.android.material.navigation.NavigationView>(R.id.navView)
 
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        toggle = ActionBarDrawerToggle(this, drawerLayout,
+            R.string.open,
+            R.string.close
+        )
         toggle.isDrawerIndicatorEnabled = true
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -33,7 +37,7 @@ class MyAccountActivity : AppCompatActivity() {
                 R.id.itemHome -> {
                     //homeFragment = HomeFragment()
                     supportFragmentManager
-                            .beginTransaction()
+                        .beginTransaction()
                     val intent = Intent(this, NavbarActivity::class.java);
                     startActivity(intent)
                 }
@@ -60,6 +64,18 @@ class MyAccountActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             true
 
+        }
+
+        if(User.fName!=null&&User.fName!="") {
+            findViewById<TextView>(R.id.tv_first_name).text = "First Name："+User.fName
+        }
+
+        if(User.lName!=null&&User.lName!=""){
+            findViewById<TextView>(R.id.tv_last_name).text = "Last Name："+User.lName
+        }
+
+        if(User.email!=null&&User.email!=""){
+            findViewById<TextView>(R.id.tv_email).text = "Email："+User.email
         }
     }
 
